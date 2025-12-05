@@ -24,7 +24,7 @@ on:
           - 'vendor'
           - 'flippy'
       CPUTHREADS:
-        description: 'Linux Branch'
+        description: 'CPU Therads'
         default: '4'
         required: true
         type: choice
