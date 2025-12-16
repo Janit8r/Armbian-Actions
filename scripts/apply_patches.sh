@@ -43,13 +43,15 @@ if [[ "${BRANCH}" =~ ^(flippy)$ ]]; then
 		KERNELBRANCH='"'"'branch:main'"'"'\n\
 		;;' config/sources/families/include/meson64_common.inc
 
-  sed -i '/case \$BRANCH in/a \
-	flippy)\n\
-		declare -g KERNEL_MAJOR_MINOR="6.12"    # Major and minor versions of this kernel.\n\
-		declare -g -i KERNEL_GIT_CACHE_TTL=120 # 2 minutes; this is a high-traffic repo\n\
-		KERNELSOURCE='"'"'https://github.com/unifreq/linux-6.12.y.git'"'"'\n\
-		KERNELBRANCH='"'"'branch:main'"'"'\n\
-		;;' config/sources/families/include/rockchip64_common.inc
+  sed -i '0,/case \$BRANCH in/{
+	/case \$BRANCH in/a\
+	flippy)\
+		declare -g KERNEL_MAJOR_MINOR="6.12"    # Major and minor versions of this kernel.\
+		declare -g -i KERNEL_GIT_CACHE_TTL=120 # 2 minutes; this is a high-traffic repo\
+		KERNELSOURCE='"'"'https://github.com/unifreq/linux-6.12.y.git'"'"'\
+		KERNELBRANCH='"'"'branch:main'"'"'\
+		;;
+		}' config/sources/families/include/rockchip64_common.inc
   cp -f ${GITHUB_WORKSPACE}/patch/test/flippy/config/* config/kernel/
 fi
 
