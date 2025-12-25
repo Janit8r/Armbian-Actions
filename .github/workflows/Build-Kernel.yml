@@ -13,6 +13,7 @@ on:
           - 'meson64'
           - 'rk35xx'
           - 'meson'
+          - 'airoha'
       BRANCH:
         description: 'Linux Branch'
         default: 'current'
@@ -47,6 +48,12 @@ jobs:
             meson)
               if [[ ! "${{ inputs.BRANCH }}" =~ ^(current)$ ]]; then
                 echo "meson only supports current branch."
+                exit 1
+              fi
+              ;;
+            airoha)
+              if [[ ! "${{ inputs.BRANCH }}" =~ ^(current|edge)$ ]]; then
+                echo "airoha only supports current and edge branches."
                 exit 1
               fi
               ;;
@@ -122,6 +129,7 @@ jobs:
             meson64)    BoardFamily="aml-s9xx-box" ;;
             rk35xx)     BoardFamily="rock-5c" ;;
             meson)      BoardFamily="onecloud" ;;
+            airoha)     BoardFamily="xg-040g-md" ;;
           esac
           [ "${{ inputs.BRANCH }}" = "flippy" ] && EXTRA_ARGS="EXTRAWIFI=no DISABLE_KERNEL_PATCHES=yes" || EXTRA_ARGS=""
           ./compile.sh kernel BOARD=${BoardFamily} BRANCH=${{ inputs.BRANCH }} PREFER_DOCKER=no DOCKER_ARMBIAN_BASE_IMAGE=ubuntu:noble DEB_COMPRESS=xz SHARE_LOG=yes ${EXTRA_ARGS}
