@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Fix line endings for files created on Windows
+echo "Fixing line endings for configuration files..."
+find "${GITHUB_WORKSPACE}/patch" -type f \( -name "*.conf" -o -name "*.config" -o -name "*.cmd" \) -exec sed -i 's/\r$//' {} \; 2>/dev/null || true
+
 # General patches
 echo "Copying General patches..."
 cp -f ${GITHUB_WORKSPACE}/patch/config/* config/kernel/
