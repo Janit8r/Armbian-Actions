@@ -94,6 +94,25 @@ cp -f ${GITHUB_WORKSPACE}/patch/JP/rk3566-jp-tvbox.dts patch/kernel/archive/rock
 cp -f ${GITHUB_WORKSPACE}/patch/JP/rk3566-jp-tvbox.dts patch/kernel/archive/rockchip64-6.18/dt/
 cp -f ${GITHUB_WORKSPACE}/patch/JP/dt/rk3566-jp-tvbox.dts patch/kernel/rk35xx-vendor-6.1/dt/
 
+# Airoha Patches
+echo "Copying Airoha patches..."
+if [ -d "${GITHUB_WORKSPACE}/patch/airoha" ]; then
+  # Copy Airoha family configuration if not exists
+  if [ ! -f "config/sources/families/airoha.conf" ]; then
+    cp -f ${GITHUB_WORKSPACE}/patch/airoha/airoha-family.conf config/sources/families/airoha.conf
+  fi
+  # Copy boot script
+  mkdir -p config/bootscripts
+  cp -f ${GITHUB_WORKSPACE}/patch/airoha/boot-airoha.cmd config/bootscripts/
+  # Copy device tree patches if any
+  if [ -d "${GITHUB_WORKSPACE}/patch/airoha/dt" ] && [ "$(ls -A ${GITHUB_WORKSPACE}/patch/airoha/dt)" ]; then
+    mkdir -p patch/kernel/archive/airoha-6.12/dt/
+    mkdir -p patch/kernel/archive/airoha-6.18/dt/
+    cp -f ${GITHUB_WORKSPACE}/patch/airoha/dt/* patch/kernel/archive/airoha-6.12/dt/ 2>/dev/null || true
+    cp -f ${GITHUB_WORKSPACE}/patch/airoha/dt/* patch/kernel/archive/airoha-6.18/dt/ 2>/dev/null || true
+  fi
+fi
+
 # Remove '-unofficial' from the VENDOR name
 sed -i 's|Armbian-unofficial|Armbian|g' lib/functions/configuration/main-config.sh
 
