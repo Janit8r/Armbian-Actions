@@ -114,6 +114,11 @@ jobs:
         if: ${{ inputs.APPLY_PATCHES == 'yes' }}
         working-directory: /mnt/workdir/build
         run: |
+          # Fix line endings first (in case files were created on Windows)
+          echo "Fixing line endings..."
+          find "${GITHUB_WORKSPACE}/patch" -type f \( -name "*.conf" -o -name "*.config" -o -name "*.cmd" -o -name "*.sh" \) -exec sed -i 's/\r$//' {} \; 2>/dev/null || true
+          
+          # Apply patches
           "${GITHUB_WORKSPACE}/scripts/apply_patches.sh"
           "${GITHUB_WORKSPACE}/scripts/rename_to_conf.sh"
 
